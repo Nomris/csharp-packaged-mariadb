@@ -1,0 +1,12 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFrameworks>net8.0;net7.0</TargetFrameworks>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Org.Websn.Utility.MariaDbPackager\Org.Websn.Utility.MariaDbPackager.csproj" />
+  </ItemGroup>
+
+</Project>
