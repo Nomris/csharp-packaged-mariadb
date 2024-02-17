@@ -7,7 +7,7 @@
     <Title>$(AssemblyName)</Title>
     <Authors>Nomris</Authors>
     <Description>A Library for downloading, installing and initializing a MariaDb Server</Description>
-    <Copyright>Nomris 2024</Copyright>
+    <Copyright>Copyright (c) 2024 Nomris</Copyright>
     <PackageProjectUrl>https://github.com/Nomris/csharp-packaged-mariadb</PackageProjectUrl>
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <RepositoryUrl>https://github.com/Nomris/csharp-packaged-mariadb</RepositoryUrl>
