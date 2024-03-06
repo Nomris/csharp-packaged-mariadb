@@ -2,6 +2,7 @@
 using System.Data;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
+using System.Threading.Tasks;
 
 namespace Org.Websn.Utility
 {
@@ -34,15 +35,18 @@ namespace Org.Websn.Utility
                 return _process;
             }
 
-            public void Stop()
+            public async Task StopAsync()
             {
                 if (!_process.HasExited)
                 {
 
-                    Process shutdownProcess = Process.Start(ShutdownStartInfo);
+                    Process shutdownProcess = await Task.Run(() => Process.Start(ShutdownStartInfo));
 
+#if NET5_0_OR_GREATER
+                    await shutdownProcess.WaitForExitAsync();
+#else
                     shutdownProcess.WaitForExit();
-
+#endif
                     if (shutdownProcess.ExitCode != 0)
                     {
                         switch (Environment.OSVersion.Platform)
@@ -59,7 +63,11 @@ namespace Org.Websn.Utility
                         return;
                     }
 
+#if NET5_0_OR_GREATER
+                    await _process.WaitForExitAsync();
+#else
                     _process.WaitForExit();
+#endif
                 }
 
                 try
@@ -72,6 +80,8 @@ namespace Org.Websn.Utility
                     _process = null;
                 }
             }
+
+            public void Stop() => StopAsync().Wait();
 
             public IDbConnection GetConnection()
             {

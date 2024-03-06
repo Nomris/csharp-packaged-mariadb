@@ -6,6 +6,7 @@ namespace Org.Websn.Utility
 {
     public static partial class MariaDbPackager
     {
+        [Obsolete]
         internal sealed partial class TargetConfiguration
         {
             [JsonProperty("version")]

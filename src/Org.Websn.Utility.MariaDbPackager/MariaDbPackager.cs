@@ -8,6 +8,7 @@ using System.Net.Http;
 using System.Resources;
 using System.Security.Cryptography;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 using Newtonsoft.Json;
@@ -23,19 +24,22 @@ namespace Org.Websn.Utility
 {
     public static partial class MariaDbPackager
     {
+        private const string CurrentInstallFileName = "current_install.json";
         private const string RestBase = "https://downloads.mariadb.org/rest-api";
+
         private static HttpClient _client = new HttpClient(new HttpClientHandler()
         {
             AllowAutoRedirect = true,
         })
         {
-            Timeout = TimeSpan.FromHours(24),
+            Timeout = TimeSpan.FromHours(1),
             DefaultRequestHeaders =
             {
                 { "User-Agent", "httpclient" }
             }
         };
 
+        [Obsolete("This function is deprecated. Use Org.Websn.Utility.MariaDbPackager.ManagedDatabase", false)]
         public static async Task<RuntimeConfig> EnsureServerAsync(string managedDirectory, string targetConfigFile = null, string overwriteInstallationDirectory = null, string overwriteDataDirectory = null, string overwriteSocketFileOrPipeName = null)
         {
             if (string.IsNullOrEmpty(targetConfigFile))
@@ -241,8 +245,14 @@ namespace Org.Websn.Utility
             if (platform == null) platform = Environment.OSVersion.Platform;
 
             Version latestVersion = await GetLatestServerVersionAsync(channel, supportClass);
-            InstalledFile installedVersion = JsonConvert.DeserializeObject<InstalledFile>(File.ReadAllText(installationDirectory + Path.DirectorySeparatorChar + "current_install.json"));
-            if (latestVersion == installedVersion.Version && platform.Value == installedVersion.PlatformID) return;
+
+            // Get Currently Installed Version
+            InstalledFile currentInstall = null;
+            if (File.Exists(installationDirectory + Path.DirectorySeparatorChar + CurrentInstallFileName))
+                currentInstall = JsonConvert.DeserializeObject<InstalledFile>(File.ReadAllText(installationDirectory + Path.DirectorySeparatorChar + CurrentInstallFileName));
+
+            if (currentInstall != null)
+                if (latestVersion == currentInstall.Version && platform.Value == currentInstall.PlatformID) return;
 
             await InstallServerAsync(installationDirectory, latestVersion.Major, latestVersion.Minor, latestVersion.Build, platform);
         }
@@ -376,16 +386,22 @@ namespace Org.Websn.Utility
                 }
             }
 
+            string downloadFilePath = null;
+
             switch (file.PackageType.ToLower()) 
             {
                 case "zip file":
-                    using (FileStream fs = new FileStream(await DownloadFileAsync(file.Id, "zip"), FileMode.Open, FileAccess.Read, FileShare.Read))
+                    downloadFilePath = await DownloadFileAsync(file.Id, "zip");
+
+                    using (FileStream fs = new FileStream(downloadFilePath, FileMode.Open, FileAccess.Read, FileShare.Read))
                     using (IReader archiveReader = ZipReader.Open(fs))
                         await ExtractArchiveAsync(archiveReader);
                     break;
 
                 case "gzipped tar file":
-                    using (FileStream fs = new FileStream(await DownloadFileAsync(file.Id, "tar.gz"), FileMode.Open, FileAccess.Read, FileShare.Read))
+                    downloadFilePath = await DownloadFileAsync(file.Id, "tar.gz");
+
+                    using (FileStream fs = new FileStream(downloadFilePath, FileMode.Open, FileAccess.Read, FileShare.Read))
                     using (GZipReader gzReader = GZipReader.Open(fs))
                     {
                         if (!gzReader.MoveToNextEntry()) throw new InvalidDataException("Faild to open .gz file");
@@ -395,6 +411,10 @@ namespace Org.Websn.Utility
                     }
                     break;
             }
+
+            File.Delete(downloadFilePath);
+
+            Thread.Sleep(1000); // Race Condition when extracting files
 
             if (Directory.Exists(installationDirectory + ".old")) Directory.Delete(installationDirectory + ".old", true);
             if (Directory.Exists(installationDirectory)) Directory.Move(installationDirectory, installationDirectory + ".old");
