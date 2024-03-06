@@ -7,6 +7,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Org.Websn.Utility.MariaDbPa
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TestingApp0", "TestingApp0\TestingApp0.csproj", "{77A6012F-E690-47BD-BC49-F2FFDD029F49}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Test", "Test\Test.csproj", "{F818E1ED-350F-42E8-86F5-E3C83CFD7161}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,8 +23,15 @@ Global
 		{77A6012F-E690-47BD-BC49-F2FFDD029F49}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{77A6012F-E690-47BD-BC49-F2FFDD029F49}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{77A6012F-E690-47BD-BC49-F2FFDD029F49}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F818E1ED-350F-42E8-86F5-E3C83CFD7161}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F818E1ED-350F-42E8-86F5-E3C83CFD7161}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F818E1ED-350F-42E8-86F5-E3C83CFD7161}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F818E1ED-350F-42E8-86F5-E3C83CFD7161}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {4BA3BB3B-B41F-44DD-8FB8-46E9ED7B2EB9}
 	EndGlobalSection
 EndGlobal
