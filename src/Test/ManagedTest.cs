@@ -32,11 +32,25 @@ namespace Test
         }
 
         [Test]
-        public async Task Run()
+        public async Task RunWithoutQuery()
         {
             Process process = _managedDatabase.StartDatabase();
 
-            Thread.Sleep(1000);
+            await Task.Delay(1000);
+
+            if (process.HasExited) Assert.Fail();
+
+            await _managedDatabase.ShutdownAsync();
+
+            Assert.Pass();
+        }
+
+        [Test]
+        public async Task RunWithQuery()
+        {
+            Process process = _managedDatabase.StartDatabase();
+
+            await Task.Delay(1000);
 
             if (process.HasExited) Assert.Fail();
 
@@ -44,12 +58,12 @@ namespace Test
             {
                 connection.Open();
 
-                using (IDbCommand command = connection.CreateCommand()) 
+                using (IDbCommand command = connection.CreateCommand())
                 {
                     command.CommandText = "CREATE DATABASE `test`";
                     command.ExecuteNonQuery();
                     connection.ChangeDatabase("test");
-                    
+
                     command.CommandText = "CREATE TABLE `test` ( `id` VARCHAR(12) PRIMARY KEY)";
                     command.ExecuteNonQuery();
 
@@ -74,6 +88,21 @@ namespace Test
             await _managedDatabase.ShutdownAsync();
 
             Assert.Pass();
+        }
+
+        [TestCase(5)]
+        public async Task Restarts(int cycles)
+        {
+            while (cycles-- > 0)
+            {
+                Process process = _managedDatabase.StartDatabase();
+
+                await Task.Delay(1000);
+
+                if (process.HasExited) Assert.Fail();
+
+                await _managedDatabase.ShutdownAsync();
+            }
         }
 
 
