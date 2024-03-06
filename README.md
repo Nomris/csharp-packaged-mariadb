@@ -1,3 +1,5 @@
+[![.NET](https://github.com/Nomris/csharp-packaged-mariadb/actions/workflows/dotnet.yml/badge.svg)](https://github.com/Nomris/csharp-packaged-mariadb/actions/workflows/dotnet.yml)
+
 # C# Packaged MariaDB
 
 A Library for downloading, installing and initializing a MariaDb Server.
