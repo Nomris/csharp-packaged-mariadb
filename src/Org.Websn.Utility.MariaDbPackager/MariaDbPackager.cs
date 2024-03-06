@@ -414,7 +414,7 @@ namespace Org.Websn.Utility
 
             File.Delete(downloadFilePath);
 
-            Thread.Sleep(1000); // Race Condition when extracting files
+            await Task.Delay(5000); // Race Condition when extracting files
 
             if (Directory.Exists(installationDirectory + ".old")) Directory.Delete(installationDirectory + ".old", true);
             if (Directory.Exists(installationDirectory)) Directory.Move(installationDirectory, installationDirectory + ".old");
