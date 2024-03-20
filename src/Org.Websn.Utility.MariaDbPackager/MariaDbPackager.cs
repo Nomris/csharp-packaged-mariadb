@@ -146,7 +146,6 @@ namespace Org.Websn.Utility
             using (StreamWriter writer = new StreamWriter(fs))
             {
                 await writer.WriteLineAsync("[mysqld]");
-                await writer.WriteLineAsync("skip-networking=true");
                 await writer.WriteLineAsync("user=root");
                 await writer.WriteLineAsync("port=3306");
                 await writer.WriteAsync("datadir='");
@@ -155,20 +154,23 @@ namespace Org.Websn.Utility
                 switch (platform)
                 {
                     case PlatformID.Win32NT:
-                        await writer.WriteLineAsync("named_pipe=true");
+                        await writer.WriteLineAsync("bind-address=127.254.231.2");
                         await writer.WriteLineAsync("plugin_load_add=auth_named_pipe");
                         break;
                     case PlatformID.Unix:
+                        await writer.WriteLineAsync("skip-networking=true");
                         await writer.WriteLineAsync("plugin_load_add=auth_unix_socket");
+
+                        await writer.WriteAsync("socket=");
+                        if (platform == PlatformID.Unix) await writer.WriteAsync('\'');
+                        await writer.WriteAsync(socketFileOrNamePipe);
+                        if (platform == PlatformID.Unix) await writer.WriteAsync('\'');
+                        await writer.WriteLineAsync();
+
                         break;
                 }
                 
 
-                await writer.WriteAsync("socket=");
-                if (platform == PlatformID.Unix) await writer.WriteAsync('\'');
-                await writer.WriteAsync(socketFileOrNamePipe);
-                if (platform == PlatformID.Unix) await writer.WriteAsync('\'');
-                await writer.WriteLineAsync();
 
                 await writer.WriteLineAsync();
 

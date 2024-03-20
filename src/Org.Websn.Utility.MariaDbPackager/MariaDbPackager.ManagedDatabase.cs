@@ -65,18 +65,18 @@ namespace Org.Websn.Utility
 
                 // Create Connection String
                 StringBuilder sb = new StringBuilder();
-                sb.Append("UID=root;Protocol=");
+                sb.Append("UID=root;Port=3306;Protocol=");
                 switch (Environment.OSVersion.Platform)
                 {
                     case PlatformID.Win32NT:
-                        sb.Append("Pipe;Host=.;Pipe=");
+                        sb.Append("TCP;Host=127.254.231.2");
                         break;
 
                     case PlatformID.Unix:
-                        sb.Append("Unix;Port=3306;Host=");
+                        sb.Append("Unix;Host=");
+                        sb.Append(_socketPathOrPipeName);
                         break;
                 }
-                sb.Append(_socketPathOrPipeName);
                 string defaultsFileDirectory = InitializeDatabaseDirectoryAsync(binaryDirectory, dataDirectory, _socketPathOrPipeName, Environment.OSVersion.Platform).Result;
 
                 _config = new RuntimeConfig()
