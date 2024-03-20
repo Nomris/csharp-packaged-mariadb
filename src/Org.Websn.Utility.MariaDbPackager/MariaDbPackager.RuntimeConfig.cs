@@ -15,12 +15,25 @@ namespace Org.Websn.Utility
 
             private Process _process;
 
+            /// <summary>
+            /// The Connection-String needed to connect to the Database
+            /// </summary>
             public string ConnectionString { get; internal set; }
 
+            /// <summary>
+            /// The <see cref="ProcessStartInfo"/> for starting the MariaDB server, use <see cref="Start"/> insted
+            /// </summary>
             public ProcessStartInfo ServiceStartInfo { get; internal set; }
 
+            /// <summary>
+            /// The <see cref="ProcessStartInfo"/> for stopping the MariaDB server, use <see cref="Stop"/> or <see cref="StopAsync"/> insted
+            /// </summary>
             public ProcessStartInfo ShutdownStartInfo { get; internal set; }
 
+            /// <summary>
+            /// Starts the MariaDB server and returns the <see cref="Process"/> representing the MariaDB server
+            /// </summary>
+            /// <returns>The refrence to the MariaDB server</returns>
             public Process Start()
             {
                 if (_process != null)
@@ -35,6 +48,10 @@ namespace Org.Websn.Utility
                 return _process;
             }
 
+            /// <summary>
+            /// Stops the MariaDB server
+            /// </summary>
+            /// <exception cref="Exception">Will be raised if the MariaDB server didn't stop corectly</exception>
             public async Task StopAsync()
             {
                 if (!_process.HasExited)
@@ -81,8 +98,15 @@ namespace Org.Websn.Utility
                 }
             }
 
+            /// <summary>
+            /// Stops the MariaDB server
+            /// </summary>
+            /// <exception cref="Exception">Will be raised if the MariaDB server didn't stop corectly</exception>
             public void Stop() => StopAsync().Wait();
 
+            /// <summary>
+            /// Get's a <see cref="IDbConnection"/> capable of connecting to the MariaDB server
+            /// </summary>
             public IDbConnection GetConnection()
             {
                 return new MySqlConnector.MySqlConnection(ConnectionString);

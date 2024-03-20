@@ -131,6 +131,15 @@ namespace Org.Websn.Utility
             };
         }
 
+        /// <summary>
+        /// Initalizes a new MariaDB Database Data directory and will allways generated a new Configuration file
+        /// </summary>
+        /// <param name="installationDirectory">The Directory where the MariaDB Server files are located</param>
+        /// <param name="dataDirectory">The Directory where the Data directory is located and where the Configuration located</param>
+        /// <param name="socketFileOrNamePipe">The Path of the Unix-Socket path, ignored when using windows</param>
+        /// <param name="platform">The Kind of plaform the installation is for and for which the Configuration file will be for</param>
+        /// <returns>The path to the Configuration file</returns>
+        /// <exception cref="PlatformNotSupportedException">The <paramref name="platform"/> is not supported</exception>
         private static async Task<string> InitializeDatabaseDirectoryAsync(string installationDirectory, string dataDirectory, string socketFileOrNamePipe, PlatformID? platform = null)
         {
             if (Environment.OSVersion.Platform != PlatformID.Unix && Environment.OSVersion.Platform != PlatformID.Win32NT)
@@ -240,6 +249,12 @@ namespace Org.Websn.Utility
             return dbConfig;
         }
 
+        /// <summary>
+        /// Installes the Latest MariaDB server matching the <paramref name="channel"/> and <paramref name="platform"/> next best will be chosen if there is no exact match
+        /// </summary>
+        /// <param name="installationDirectory">The Directory where the MariaDB Server files are located</param>
+        /// <param name="platform">The Kind of plaform the installation is for and for which the Configuration file will be for</param>
+        /// <exception cref="PlatformNotSupportedException">The <paramref name="platform"/> is not supported</exception>
         public static async Task InstallLatestServerAsync(string installationDirectory, ReleaseChannel channel = ReleaseChannel.Stable, SupportClass? supportClass = null, PlatformID? platform = null)
         {
             if (Environment.OSVersion.Platform != PlatformID.Unix && Environment.OSVersion.Platform != PlatformID.Win32NT)
@@ -259,6 +274,10 @@ namespace Org.Websn.Utility
             await InstallServerAsync(installationDirectory, latestVersion.Major, latestVersion.Minor, latestVersion.Build, platform);
         }
 
+        /// <summary>
+        /// Get's the Latest MariaDB server Version matching the <paramref name="channel"/> and <paramref name="platform"/> next best will be chosen if there is no exact match
+        /// </summary>
+        /// <returns>The closest mathcing Version of the MariaDB server</returns>
         public static async Task<Version> GetLatestServerVersionAsync(ReleaseChannel channel = ReleaseChannel.Stable, SupportClass? supportClass = null)
         {
             HttpResponseMessage response = await _client.SendAsync(new HttpRequestMessage(HttpMethod.Get, $"{RestBase}/mariadb/"));
@@ -311,6 +330,17 @@ namespace Org.Websn.Utility
             }).OrderBy(e => e.Key).Reverse().FirstOrDefault().Key;
         }
 
+        /// <summary>
+        /// Installes a MariaDB server matching the provided Server version
+        /// </summary>
+        /// <param name="installationDirectory">The Directory where the MariaDB Server files are located</param>
+        /// <param name="major"><see cref="Version.Major"/></param>
+        /// <param name="minor"><see cref="Version.Minor"/></param>
+        /// <param name="build"><see cref="Version.Build"/></param>
+        /// <param name="platform">The Kind of plaform the installation is for and for which the Configuration file will be for</param>
+        /// <exception cref="PlatformNotSupportedException">The <paramref name="platform"/> is not supported</exception>
+        /// <exception cref="FileNotFoundException">Will be raised if no File cloud be acured from the MariaDB-API</exception>
+        /// <exception cref="InvalidDataException">Will be raised if there was a faliure to the .gz file, <see cref="PlatformID.Unix"/> only</exception>
         public static async Task InstallServerAsync(string installationDirectory, int major, int minor, int? build = null, PlatformID? platform = null)
         {
             if (Environment.OSVersion.Platform != PlatformID.Unix && Environment.OSVersion.Platform != PlatformID.Win32NT)

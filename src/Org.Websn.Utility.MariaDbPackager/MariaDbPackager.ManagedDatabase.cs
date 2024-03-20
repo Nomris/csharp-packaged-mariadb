@@ -108,7 +108,6 @@ namespace Org.Websn.Utility
             /// <summary>
             /// Create a <see cref="IDbConnection"/> for the ManagedDatabase
             /// </summary>
-            /// <returns></returns>
             public IDbConnection GetConnection() => _config.GetConnection();
 
             public Process StartDatabase()
