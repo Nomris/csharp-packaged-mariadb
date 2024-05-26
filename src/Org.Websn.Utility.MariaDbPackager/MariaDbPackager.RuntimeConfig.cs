@@ -52,7 +52,7 @@ namespace Org.Websn.Utility
             /// Stops the MariaDB server
             /// </summary>
             /// <exception cref="Exception">Will be raised if the MariaDB server didn't stop corectly</exception>
-            public async Task StopAsync()
+            public async Task<int> StopAsync()
             {
                 if (!_process.HasExited)
                 {
@@ -77,7 +77,7 @@ namespace Org.Websn.Utility
                                 break;
                         }
 
-                        return;
+                        return -1;
                     }
 
 #if NET5_0_OR_GREATER
@@ -89,8 +89,7 @@ namespace Org.Websn.Utility
 
                 try
                 {
-                    if (_process.ExitCode != 0) throw new Exception("MariaDB Server exit code none-zero (" + _process.ExitCode + ")");
-                }
+                    return _process.ExitCode;                }
                 finally
                 {
                     _process.Dispose();
