@@ -99,7 +99,7 @@ namespace Test
 
                 await Task.Delay(1000);
 
-                if (process.HasExited) Assert.Fail("Remaing Cycles: {0}", cycles);
+                if (process.HasExited) Assert.Fail(string.Format("Remaing Cycles: {0}", cycles));
 
                 await _managedDatabase.ShutdownAsync();
             }
