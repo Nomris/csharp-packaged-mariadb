@@ -10,7 +10,18 @@ namespace Org.Websn.Utility
         internal sealed class Release
         {
             [JsonProperty("release_id")]
-            public Version Version { get; set; }
+            public string VersionRaw { get; set; }
+            
+            public Version Version 
+            {
+                get
+                {
+                    string input = VersionRaw.Split(' ')[0];
+                    if (input.Split('.').Length == 1) input += ".0";
+                    return new Version(input);
+                }
+                set => VersionRaw = value.ToString(); 
+            }
 
             [JsonProperty("release_name")]
             public string Name { get; set; }
