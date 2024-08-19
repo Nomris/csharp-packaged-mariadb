@@ -1,0 +1,23 @@
+variables:
+  DOCKER_IMAGE: mcr.microsoft.com/dotnet/sdk:8.0
+include:
+  - component: $CI_SERVER_FQDN/websn/ci-templates/dotnet-build@v0.0.12
+    inputs:
+      stage: build
+      docker-image: $DOCKER_IMAGE
+      directory: './src/'
+  - component: $CI_SERVER_FQDN/websn/ci-templates/dotnet-test@v0.0.12
+    inputs:
+      stage: build
+      docker-image: $DOCKER_IMAGE
+      directory: './src/'
+  - component: $CI_SERVER_FQDN/websn/ci-templates/dotnet-deploy@v0.0.12
+    inputs:
+      stage: build
+      docker-image: $DOCKER_IMAGE
+      directory: './src/'
+
+stages:
+- build
+- test
+- deploy
