@@ -8,23 +8,23 @@
     <Authors>Nomris</Authors>
     <Description>A Library for downloading, installing and initializing a MariaDb Server</Description>
     <Copyright>Copyright (c) 2024 Nomris</Copyright>
-    <PackageProjectUrl>https://github.com/Nomris/csharp-packaged-mariadb</PackageProjectUrl>
+    <PackageProjectUrl>https://gitlab.websn.org/websn/packaged-mariadb</PackageProjectUrl>
     <PackageReadmeFile>README.md</PackageReadmeFile>
-    <RepositoryUrl>https://github.com/Nomris/csharp-packaged-mariadb</RepositoryUrl>
+    <RepositoryUrl>https://gitlab.websn.org/websn/packaged-mariadb</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
     <NeutralLanguage>en-001</NeutralLanguage>
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
     <IncludeSymbols>True</IncludeSymbols>
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
-    <Version>1.1.1.1</Version>
+    <Version>1.1.1.2</Version>
   </PropertyGroup>
 
   <ItemGroup>
-    <None Include="..\..\LICENSE">
+    <None Include="../../LICENSE">
       <Pack>True</Pack>
       <PackagePath>\</PackagePath>
     </None>
-    <None Include="..\..\README.md">
+    <None Include="../../README.md">
       <Pack>True</Pack>
       <PackagePath>\</PackagePath>
     </None>
